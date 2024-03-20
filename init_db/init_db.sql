@@ -7,3 +7,5 @@ id INTEGER AUTO_INCREMENT,
 name TEXT,
 PRIMARY KEY (id)
 ) COMMENT='this is my test table';
+
+INSERT INTO testtab (name) VALUES ('Fulano'), ('Sicrano'), ('Beltrano');
