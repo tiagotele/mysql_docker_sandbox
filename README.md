@@ -32,5 +32,28 @@ docker exec -it my_sql_container bash
 ./scripts/dump_databaes.sh
 ```
 ___
-# Importing data into MySQL version 8.0
-TBD
+# Importing data into MySQL version 8.3.0
+
+## Running MySQL 8.3.0
+```bash
+    docker run \
+    --name='my_sql_container' \
+    -p 3306:3306 \
+    -e MYSQL_ROOT_PASSWORD=1234 \
+    -v ./scripts:/scripts \
+    mysql:8.3.0
+```
+
+## Operations inside MySQL in Docker
+Enter MySQL container with this command:
+```bash
+docker exec -it my_sql_container bash 
+```
+
+### Loading dump into current MySQL instance
+
+```bash
+mysql -u root -p < scripts/backup.sql 
+```
+
+Now you can see the databases and tables in new MySQL 8.3.0
