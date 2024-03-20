@@ -17,6 +17,11 @@ ___
 
 ## Operations inside MySQL in Docker
 
+Enter MySQL container with this command:
+```bash
+docker exec -it my_sql_container bash 
+```
+
 ### Pre-flight check
 ```bash
 ./scripts/pre_flight_update_check.sh
