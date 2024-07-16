@@ -13,16 +13,27 @@ ORDER BY
 
 
 query_table_indexes = """
-	SELECT  
-		table_schema,
-		table_name,
-		index_name,
-		column_name
-	FROM 
-		information_schema.statistics
-	WHERE 
-		non_unique = 1
-	AND 
-		table_schema in ('test')
-	;
+SELECT  
+	table_schema,
+	table_name,
+	index_name,
+	column_name
+FROM 
+	information_schema.statistics
+WHERE 
+	non_unique = 1
+AND 
+	table_schema in ('test')
+;
+"""
+
+query_partitions = """
+SELECT 
+    *
+FROM 
+    information_schema.partitions
+WHERE 
+    TABLE_SCHEMA in ('test')
+    AND PARTITION_NAME IS NOT NULL
+;
 """

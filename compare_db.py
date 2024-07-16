@@ -1,5 +1,5 @@
 import mysql.connector
-from queries import query_rows_in_tables, query_table_indexes
+from queries import query_rows_in_tables, query_table_indexes,  query_partitions
 from connections import conn_source, conn_target
 from compare import same_dicts
 from typing import List, Dict
@@ -22,6 +22,7 @@ def main():
         with conn_source.cursor() as cursor_source, conn_target.cursor() as cursor_target:
             compare_datasets_based_in_query(cursor_source, cursor_target, query_rows_in_tables)
             compare_datasets_based_in_query(cursor_source, cursor_target, query_table_indexes)
+            compare_datasets_based_in_query(cursor_source, cursor_target, query_partitions)
     except mysql.connector.Error as err:
         print(f"Error {err}")
     finally:
