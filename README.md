@@ -6,13 +6,7 @@ ___
 
 # Exporting data from MySQL version 5.7
 ```bash
-    docker run \
-    --name='my_sql_container' \
-    -p 3306:3306 \
-    -e MYSQL_ROOT_PASSWORD=1234 \
-    -v ./init_db:/docker-entrypoint-initdb.d \
-    -v ./scripts:/scripts \
-    mysql/mysql-server:5.7 
+./init_mysql8.sh
 ```
 
 ## Operations inside MySQL in Docker
@@ -36,12 +30,7 @@ ___
 
 ## Running MySQL 8.3.0
 ```bash
-    docker run \
-    --name='my_sql_container_new' \
-    -p 3307:3306 \
-    -e MYSQL_ROOT_PASSWORD=1234 \
-    -v ./scripts:/scripts \
-    mysql:8.3.0
+./init_mysql8.sh
 ```
 
 ## Operations inside MySQL in Docker
