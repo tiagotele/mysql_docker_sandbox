@@ -2,29 +2,29 @@ import mysql.connector
 from queries import query_rows_in_tables
 from connections import conn_source, conn_target
 from compare import same_dicts
+from typing import List, Dict
 
-cursor_source = conn_source.cursor()
-cursor_source.execute(query_rows_in_tables)
+def fetch_rows_per_table(cursor, query) -> List[Dict[str, int]]:
+    cursor.execute(query)
+    results = cursor.fetchall()
+    return [{row[0]: row[1]} for row in results]
 
-cursor_target = conn_target.cursor()
-cursor_target.execute(query_rows_in_tables)
+def main():
+    
+    try:
+        with conn_source.cursor() as cursor_source, conn_target.cursor() as cursor_target:
+            rows_per_table_source = fetch_rows_per_table(cursor_source, query_rows_in_tables)
+            rows_per_table_target = fetch_rows_per_table(cursor_target, query_rows_in_tables)
+        if same_dicts(rows_per_table_source, rows_per_table_target, True):
+            print("Same nubmer of rows in each database")
+        else:
+            print("Different nubmer of rows in each database")
+    except mysql.connector.Error as err:
+        print(f"Error {err}")
+    finally:
+        conn_source.close()
+        conn_target.close()
+            
 
-results_source = cursor_source.fetchall()
-results_target = cursor_target.fetchall()
-
-rows_per_table_source = []
-for row in results_source:
-    rows_per_table_source.append({row[0]: row[1]})
-
-
-rows_per_table_target = []
-for row in results_target:
-    rows_per_table_target.append({row[0]: row[1]})
-
-if same_dicts(rows_per_table_source, rows_per_table_target, True):
-    print("Same number of rows in each database")
-else:
-    print("Different number of rows in each databa`se`")
-
-cursor_source.close()
-conn_source.close()
+if __name__ == "__main__":
+    main()
