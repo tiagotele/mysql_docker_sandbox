@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  mysql_5_7:
+    image: mysql/mysql-server:5.7
+    container_name: my_sql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init_db:/docker-entrypoint-initdb.d
+      - ./scripts:/scripts
+    networks:
+      - mysql_net
+
+  mysql_8_0:
+    image: mysql:8.3.0
+    container_name: my_sql_container_new
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./init_db8:/docker-entrypoint-initdb.d
+      - ./scripts:/scripts
+    networks:
+      - mysql_net
+
+networks:
+  mysql_net:
+    driver: bridge

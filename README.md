@@ -46,3 +46,17 @@ mysql -u root -p < scripts/backup.sql
 ```
 
 Now you can see the databases and tables in new MySQL 8.3.0
+
+---
+
+# Check for differences between MySQL 5.7 and 8.3
+
+Firstly run the both databases with Docker compose:
+```bash
+docker compose up
+```
+
+Then run the Python script:
+```bash
+python3 compare_db.py
+```
