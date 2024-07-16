@@ -58,5 +58,5 @@ docker compose up
 
 Then run the Python script:
 ```bash
-python3 compare_db.py
+python3 src/compare_db.py
 ```
