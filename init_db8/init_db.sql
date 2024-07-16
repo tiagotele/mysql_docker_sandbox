@@ -9,7 +9,7 @@ CREATE TABLE testtab (
     PRIMARY KEY (id)
 ) COMMENT='this is my test table';
 
-INSERT INTO testtab (name) VALUES ('Fulano'), ('Sicrano'), ('Beltrano');
+INSERT INTO testtab (name) VALUES ('Fulano'), ('Sicrano'), ('Beltrano'), ('Zicrano');
 
 -- Create the second table
 CREATE TABLE employees (
@@ -24,8 +24,6 @@ CREATE TABLE employees (
 INSERT INTO employees (first_name, last_name, department, salary) VALUES
 ('John', 'Doe', 'Engineering', 60000.00),
 ('Jane', 'Smith', 'Marketing', 55000.00),
-('Emily', 'Jones', 'Sales', 50000.00),
-('Michael', 'Brown', 'HR', 45000.00),
 ('Chris', 'Davis', 'Finance', 70000.00);
 
 -- Create the third table
@@ -41,11 +39,9 @@ CREATE TABLE products (
 INSERT INTO products (product_name, category, price, stock_quantity) VALUES
 ('Laptop', 'Electronics', 1000.00, 50),
 ('Smartphone', 'Electronics', 700.00, 150),
-('Tablet', 'Electronics', 300.00, 200),
 ('Headphones', 'Accessories', 50.00, 300),
 ('Charger', 'Accessories', 20.00, 500);
 
 -- PERMISSION TO ROOT
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '1234';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
 FLUSH PRIVILEGES;
