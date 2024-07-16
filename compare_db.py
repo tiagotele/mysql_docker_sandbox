@@ -1,6 +1,7 @@
 import mysql.connector
 from queries import query_rows_in_tables
 from connections import conn_source, conn_target
+from compare import same_dicts
 
 cursor_source = conn_source.cursor()
 cursor_source.execute(query_rows_in_tables)
@@ -15,13 +16,15 @@ rows_per_table_source = []
 for row in results_source:
     rows_per_table_source.append({row[0]: row[1]})
 
-print(rows_per_table_source)
 
 rows_per_table_target = []
 for row in results_target:
     rows_per_table_target.append({row[0]: row[1]})
 
-print(rows_per_table_target)
+if same_dicts(rows_per_table_source, rows_per_table_target, True):
+    print("Same number of rows in each database")
+else:
+    print("Different number of rows in each databa`se`")
 
 cursor_source.close()
 conn_source.close()
