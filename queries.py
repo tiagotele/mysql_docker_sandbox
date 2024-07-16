@@ -10,3 +10,19 @@ ORDER BY
 	table_rows DESC
 ;
 """
+
+
+query_table_indexes = """
+	SELECT  
+		table_schema,
+		table_name,
+		index_name,
+		column_name
+	FROM 
+		information_schema.statistics
+	WHERE 
+		non_unique = 1
+	AND 
+		table_schema in ('test')
+	;
+"""
