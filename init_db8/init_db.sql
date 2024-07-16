@@ -41,3 +41,7 @@ INSERT INTO products (product_name, category, price, stock_quantity) VALUES
 ('Smartphone', 'Electronics', 700.00, 150),
 ('Headphones', 'Accessories', 50.00, 300),
 ('Charger', 'Accessories', 20.00, 500);
+
+-- PERMISSION TO ROOT
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
