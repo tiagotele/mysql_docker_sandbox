@@ -3,6 +3,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import random
 
+MAX_WORKERS=10
+
 # MySQL connection configuration
 config = {
     'user': 'root',
@@ -37,6 +39,18 @@ tables = [
     "SELECT COUNT(1) FROM test.books;",
     ]
 
+tables2 = [
+    "SELECT COUNT(1) FROM test2.people;",
+    "SELECT COUNT(1) FROM test2.companies;",
+    "SELECT COUNT(1) FROM test2.cars;",
+    "SELECT COUNT(1) FROM test2.products;",
+    "SELECT COUNT(1) FROM test2.orders;",
+    "SELECT COUNT(1) FROM test2.employees;",
+    "SELECT COUNT(1) FROM test2.departments;",
+    "SELECT COUNT(1) FROM test2.cities;",
+    "SELECT COUNT(1) FROM test2.countries;",
+    "SELECT COUNT(1) FROM test2.books;",
+    ]
 
 
 # Function to execute the SELECT COUNT(*) query
@@ -73,18 +87,26 @@ def run_query(conn_config, query):
 # Execute queries in parallel using ThreadPoolExecutor
 def execute_queries_in_parallel(tables):
     print("Starting queries")
-    with ThreadPoolExecutor(max_workers=32) as executor:
-        future_to_table = {executor.submit(run_query, config, table): table for table in tables}
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        future_to_table2 = {executor.submit(run_query, config, table): table for table in tables}
+        future_to_table2 = {executor.submit(run_query, config, table): table for table in tables2}
 
-        for future in as_completed(future_to_table):
-            table = future_to_table[future]
+        for future in as_completed(future_to_table2):
+            table = future_to_table2[future]
             try:
                 data = future.result(timeout=10)
-                # print(f"Query: {data[0]}, Count: {data[1]}")
                 print(f"DONE = {data}")
             except Exception as exc:
                 print(f"Query: {table} generated an exception: {exc}")
-
+        for future in as_completed(future_to_table2):
+            table = future_to_table2[future]
+            try:
+                data = future.result(timeout=10)
+                print(f"DONE = {data}")
+            except Exception as exc:
+                print(f"Query: {table} generated an exception: {exc}")
+    print("pool finished")
+    
 
 if __name__ == "__main__":
     s = time.time()
