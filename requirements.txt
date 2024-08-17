@@ -1,1 +1,4 @@
-mysql-connector-python
+Faker==27.0.0
+mysql-connector-python==9.0.0
+python-dateutil==2.9.0.post0
+six==1.16.0

@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 1234
     ports:
-      - "3306:3306"
+      - "3310:3306"
     volumes:
       - ./init_db:/docker-entrypoint-initdb.d
       - ./scripts:/scripts
@@ -20,12 +20,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 1234
     ports:
-      - "3307:3306"
+      - "33011:3306"
     volumes:
       - ./init_db8:/docker-entrypoint-initdb.d
       - ./scripts:/scripts
     networks:
       - mysql_net
+    # command: --default-authentication-plugin=mysql_native_password
 
 networks:
   mysql_net:

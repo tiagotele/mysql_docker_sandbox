@@ -12,7 +12,7 @@ CREATE TABLE people (
     last_name VARCHAR(50),
     birth_date DATE,
     email VARCHAR(100),
-    phone_number VARCHAR(15)
+    phone_number VARCHAR(30)
 );
 
 -- Table 2: Companies
@@ -111,7 +111,7 @@ CREATE TABLE people (
     last_name VARCHAR(50),
     birth_date DATE,
     email VARCHAR(100),
-    phone_number VARCHAR(15)
+    phone_number VARCHAR(30)
 );
 
 -- Table 2: Companies

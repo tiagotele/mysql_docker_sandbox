@@ -1,7 +1,7 @@
 #!/bin/bash
 docker run \
     --name='my_sql_container' \
-    -p 3306:3306 \
+    -p 3310:3306 \
     -e MYSQL_ROOT_PASSWORD=1234 \
     -v ./init_db:/docker-entrypoint-initdb.d \
     -v ./scripts:/scripts \
