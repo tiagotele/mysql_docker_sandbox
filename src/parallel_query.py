@@ -11,27 +11,26 @@ def run_completed(futures):
         try:
             data = future.result(timeout=10)
             result.append(data)
-            print(f"Done = {data}")
         except Exception as exc:
             print(f"Query: {table} generated an exception: {exc}")
     return result
 
 
 def execute_queries_in_parallel(
-    queries1: list[str] = [],
-    queries2: list[str] = [],
-    config1: dict = {},
-    config2: dict = {},
+    queries_src: dict = {},
+    queries_dest: dict = {},
+    config_src: dict = {},
+    config_dest: dict = {},
 ):
     print("Starting queries")
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_to_table1 = {
-            executor.submit(run_query, config1, query): query for query in queries1
+        future_to_table_src = {
+            executor.submit(run_query, config_src, name, query): (name, query) for name, query in queries_src.items()
         }
-        future_to_table2 = {
-            executor.submit(run_query, config2, query): query for query in queries2
+        future_to_table_dest = {
+            executor.submit(run_query, config_dest, name, query): (name, query) for name, query in queries_dest.items()
         }
 
-        output1 = run_completed(future_to_table1)
-        output2 = run_completed(future_to_table2)
-    return output1, output2
+        output_src = run_completed(future_to_table_src)
+        output_dest = run_completed(future_to_table_dest)
+    return output_src, output_dest

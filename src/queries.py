@@ -112,7 +112,7 @@ SELECT
 FROM 
 	information_schema.TRIGGERS
 WHERE 
-	TRIGGER_SCHEMA not in ("mysql") # native mysql not required for compare in migrations
+	TRIGGER_SCHEMA not in ("mysql")
 ;
 """
 
@@ -124,23 +124,22 @@ QUERY_12_LIST_USERS_AND_ITS_PERMISSIONS = """
 SELECT User FROM mysql.user;
 """
 
-QUERIES_FIRST_PHASE = [
-    QUERY_1_VERSIONS,
-    # QUERY_2_VARIABLES,
-    QUERY_3_SCHEMAS_LIST,
-    QUERY_4_LIST_TABLES,
-    QUERY_5_LIST_VIEWS,
-    QUERY_6_LIST_CONSTRAINTS,
-    QUERY_7_LIST_INDEXES,
-    QUERY_8_LIST_PARTITIONS,
-    QUERY_9_LIST_STORED_PROCEDURES,
-    QUERY_10_LIST_TRIGGERS,
-    QUERY_11_LIST_USERS_AND_HOSTS,
-    QUERY_12_LIST_USERS_AND_ITS_PERMISSIONS,
-]
+QUERIES_FIRST_PHASE = {
+    "QUERY_1_VERSIONS": QUERY_1_VERSIONS,
+    "QUERY_2_VARIABLES": QUERY_2_VARIABLES,
+    "QUERY_3_SCHEMAS_LIST": QUERY_3_SCHEMAS_LIST,
+    "QUERY_4_LIST_TABLES": QUERY_4_LIST_TABLES,
+    "QUERY_6_LIST_CONSTRAINTS": QUERY_6_LIST_CONSTRAINTS,
+    "QUERY_7_LIST_INDEXES": QUERY_7_LIST_INDEXES,
+    "QUERY_8_LIST_PARTITIONS": QUERY_8_LIST_PARTITIONS,
+    "QUERY_9_LIST_STORED_PROCEDURES": QUERY_9_LIST_STORED_PROCEDURES,
+    "QUERY_10_LIST_TRIGGERS": QUERY_10_LIST_TRIGGERS,
+    "QUERY_11_LIST_USERS_AND_HOSTS": QUERY_11_LIST_USERS_AND_HOSTS,
+    "QUERY_12_LIST_USERS_AND_ITS_PERMISSIONS": QUERY_12_LIST_USERS_AND_ITS_PERMISSIONS,
+}
 
 
-def run_query(conn_config, query):
+def run_query(conn_config, name, query):
 
     cnx = None
     cursor = None
@@ -158,7 +157,7 @@ def run_query(conn_config, query):
         #     f"\nQuery = {query}.\nTotal = {result[0]}. Query execution time: {total:.3f}"
         # )
 
-        return query, result
+        return name, query, result
 
     except mysql.connector.Error as err:
         return query, f"Error: {err}"
@@ -168,3 +167,7 @@ def run_query(conn_config, query):
             cursor.close()
         if cnx:
             cnx.close()
+
+
+# for k,v in QUERIES_FIRST_PHASE.items():
+#     print(k)

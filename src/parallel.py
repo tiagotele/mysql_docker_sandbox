@@ -8,8 +8,6 @@ from connector_settings import connections
 
 if __name__ == "__main__":
     s = time.time()
-    # for query in QUERIES_FIRST_PHASE:
-    #     print(query)
     output = execute_queries_in_parallel(
         QUERIES_FIRST_PHASE,
         QUERIES_FIRST_PHASE,
