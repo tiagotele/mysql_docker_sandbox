@@ -92,8 +92,10 @@ if __name__ == "__main__":
                     general_data_destiny[key],
                     fetch_list_from_set,
                 )
-    top_tables_src = run_query(connections["config1"], "top tables", TOP_TABLES)
-    top_tables_dest = run_query(connections["config2"], "top tables", TOP_TABLES)
+    
+    print(f"second phase")
+    top_tables_src = run_query(connections["config1"], "TOP_TABLES", TOP_TABLES)
+    top_tables_dest = run_query(connections["config2"], "TOP_TABLES", TOP_TABLES)
     
     top_queries_dict_src = {f"{schema}.{table}": f"SELECT COUNT(1) FROM {schema}.{table};" for schema, table in top_tables_src[2]}
     top_queries_dict_dest = {f"{schema}.{table}": f"SELECT COUNT(1) FROM {schema}.{table};" for schema, table in top_tables_dest[2]}
@@ -104,26 +106,10 @@ if __name__ == "__main__":
         connections["config1"],
         connections["config2"],
     )
-    
 
     general_data_source = {name: output for name, query, output in sorted(output_src)}
     general_data_destiny = {name: output for name, query, output in sorted(output_dest)}
     
     all_keys = set(general_data_source.keys()).union(set(general_data_destiny.keys()))
     for key in sorted(all_keys):
-        if tuples_list_are_equal(general_data_source[key], general_data_destiny[key]):
-            print(f"{key} are igual")
-        else:
-            print(f"{key} are different")
-            if key in ["QUERY_02_VARIABLES"]:
-                show_diff(
-                    general_data_source[key],
-                    general_data_destiny[key],
-                    fetch_dict_from_set,
-                )
-            else:
-                show_diff(
-                    general_data_source[key],
-                    general_data_destiny[key],
-                    fetch_list_from_set,
-                )
+        print(f"{key}, {general_data_source[key][0][0]}, {general_data_destiny[key][0][0]}")
