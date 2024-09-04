@@ -1,7 +1,7 @@
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from queries import run_query, QUERIES_FIRST_PHASE
+from queries import run_query, QUERIES_FIRST_PHASE, TOP_TABLES
 from parallel_query import execute_queries_in_parallel
 from connector_settings import connections
 
@@ -92,3 +92,12 @@ if __name__ == "__main__":
                     general_data_destiny[key],
                     fetch_list_from_set,
                 )
+    top_tables_src = run_query(connections["config1"], "top tables", TOP_TABLES)
+    top_tables_dest = run_query(connections["config2"], "top tables", TOP_TABLES)
+    
+    for table in top_tables_src[2]:
+        print(table)
+
+    print("***")
+    for table in top_tables_dest[2]:
+        print(table)

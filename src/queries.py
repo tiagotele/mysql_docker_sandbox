@@ -124,6 +124,19 @@ QUERY_12_LIST_USERS_AND_ITS_PERMISSIONS = """
 SELECT User FROM mysql.user;
 """
 
+TOP_TABLES = f"""
+SELECT
+    table_schema, 
+	table_name AS 'table'
+FROM
+    information_schema.tables
+WHERE
+    TABLE_SCHEMA NOT IN ('mysql', 'performance_schema', 'sys')
+    AND TABLE_TYPE = 'BASE TABLE'
+ORDER BY
+    table_rows ASC, table_name ASC
+"""
+
 QUERIES_FIRST_PHASE = {
     "QUERY_01_VERSIONS": QUERY_01_VERSIONS,
     "QUERY_02_VARIABLES": QUERY_02_VARIABLES,
