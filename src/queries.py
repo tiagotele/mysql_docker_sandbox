@@ -180,7 +180,3 @@ def run_query(conn_config, name, query) -> tuple:
             cursor.close()
         if cnx:
             cnx.close()
-
-
-# for k,v in QUERIES_FIRST_PHASE.items():
-#     print(k)

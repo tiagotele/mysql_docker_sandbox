@@ -26,7 +26,6 @@ services:
       - ./scripts:/scripts
     networks:
       - mysql_net
-    # command: --default-authentication-plugin=mysql_native_password
 
 networks:
   mysql_net:
