@@ -2,7 +2,7 @@
     "source": {
         "description": "source",
         "host": "localhost",
-        "port": 3306,
+        "port": 33010,
         "user": "root",
         "password": "1234",
         "database": "information_schema"
@@ -10,7 +10,7 @@
     "target": {
         "description": "source",
         "host": "localhost",
-        "port": 3307,
+        "port": 33011,
         "user": "root",
         "password": "1234",
         "database": "information_schema"
