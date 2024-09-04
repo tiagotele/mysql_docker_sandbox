@@ -59,6 +59,12 @@ def tuples_list_are_equal(l1: list = [], l2: list = []) -> bool:
 
 
 if __name__ == "__main__":
+    
+    # ################################################################
+    # # FIRST PHASE
+    # ################################################################
+    
+    print(f"first phase")
     s = time.time()
     output_src, output_dest = execute_queries_in_parallel(
         QUERIES_FIRST_PHASE,
@@ -93,6 +99,10 @@ if __name__ == "__main__":
                     fetch_list_from_set,
                 )
     
+    # ################################################################
+    # # SECOND PHASE
+    # ################################################################
+    
     print(f"second phase")
     top_tables_src = run_query(connections["config1"], "TOP_TABLES", TOP_TABLES)
     top_tables_dest = run_query(connections["config2"], "TOP_TABLES", TOP_TABLES)
@@ -113,3 +123,5 @@ if __name__ == "__main__":
     all_keys = set(general_data_source.keys()).union(set(general_data_destiny.keys()))
     for key in sorted(all_keys):
         print(f"{key}, {general_data_source[key][0][0]}, {general_data_destiny[key][0][0]}")
+
+    
