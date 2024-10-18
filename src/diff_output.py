@@ -8,7 +8,7 @@ output_source = {'QUERY_01_VERSIONS': [('5.7.41',)],
                                         ],
                  'QUERY_03_SCHEMAS_LIST': [('information_schema',), ('mysql',), ('performance_schema',), ('sys',),
                                            ('test',), ('test2',)],
-                 'QUERY_04_LIST_TABLES': [],
+                 'QUERY_04_LIST_TABLES': [('people',), ('books',),],
                  'QUERY_06_LIST_CONSTRAINTS': [], 'QUERY_07_LIST_INDEXES': [], 'QUERY_08_LIST_PARTITIONS': [],
                  'QUERY_09_LIST_STORED_PROCEDURES': [],
                  'QUERY_10_LIST_TRIGGERS': [('sys_config_insert_set_user', 'INSERT', 'sys_config'),
@@ -23,7 +23,7 @@ output_destiny = {'QUERY_01_VERSIONS': [('8.3.0',)],
                                         ('innodb_open_files', '4000'),],
                   'QUERY_03_SCHEMAS_LIST': [('information_schema',), ('mysql',), ('performance_schema',), ('sys',),
                                             ('test',), ('test2',)],
-                  'QUERY_04_LIST_TABLES': [],
+                  'QUERY_04_LIST_TABLES': [('people',), ('books2',),],
                   'QUERY_06_LIST_CONSTRAINTS': [], 'QUERY_07_LIST_INDEXES': [], 'QUERY_08_LIST_PARTITIONS': [],
                   'QUERY_09_LIST_STORED_PROCEDURES': [],
                   'QUERY_10_LIST_TRIGGERS': [('sys_config_insert_set_user', 'INSERT', 'sys_config'),
@@ -90,7 +90,7 @@ for key in sorted(all_keys):
         print(f"{key} are igual")
     else:
         print(f"{key} are different")
-        if key in ["QUERY_02_VARIABLES"]:
+        if key in ["QUERY_02_VARIABLES", "QUERY_11_LIST_USERS_AND_HOSTS"]:
             if SHOW_DIFF:
                 source_dict = extract_dict_from_list(set(output_source[key]))
                 destiny_dict = extract_dict_from_list(set(output_destiny[key]))
