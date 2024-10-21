@@ -56,7 +56,7 @@ def join_tuple_elements(t):
     return ".".join(t)
 
 
-def show_tuples_diff(source_list:list = [], destiny_list:list = [], source_name:str = "source", destiny_name:str = "destiny"):
+def show_tuples_diff(source_list:list = [], destiny_list:list = [], source_name:str = "blue", destiny_name:str = "green"):
     set_l1 = set(source_list)
     set_l2 = set(destiny_list)
 
@@ -87,9 +87,9 @@ def show_tuples_diff(source_list:list = [], destiny_list:list = [], source_name:
 
 """ Few are just list others are key value """
 
-def compare_dicts(dict_a, dict_b) -> str:
+def compare_dicts(dict_a: dict, dict_b: dict, source_name:str = "blue", destiny_name:str = "green") -> str:
     all_keys = set(dict_a.keys()).union(set(dict_b.keys()))
-    result = f"table,blue,green,comparator"
+    result = f"key,{source_name},{destiny_name},result"
     for key in all_keys:
         value_a = dict_a.get(key, "N/A")
         value_b = dict_b.get(key, "N/A")
@@ -125,17 +125,17 @@ for key in sorted(all_keys):
     else:
         print(f"{key} are different")
         # If are key value
-        if key in ["QUERY_02_VARIABLES", "QUERY_11_LIST_USERS_AND_HOSTS"]:
-            if SHOW_DIFF:
-                source_dict = extract_dict_from_list(set(output_source[key]))
-                destiny_dict = extract_dict_from_list(set(output_destiny[key]))
-                print_with_indent(compare_dicts(source_dict, destiny_dict), 1)
-        # If elements are just list
-        else:
-            if SHOW_DIFF:
-                print_with_indent(show_tuples_diff(source_list=output_source[key], destiny_list=output_destiny[key]), 1)
-                # show_diff(
-                #     output_source[key],
-                #     output_destiny[key],
-                #     fetch_list_from_set
-                # )
+    if key in ["QUERY_02_VARIABLES", "QUERY_11_LIST_USERS_AND_HOSTS"]:
+        if SHOW_DIFF:
+            source_dict = extract_dict_from_list(set(output_source[key]))
+            destiny_dict = extract_dict_from_list(set(output_destiny[key]))
+            print_with_indent(compare_dicts(source_dict, destiny_dict), 1)
+    # If elements are just list
+    else:
+        if SHOW_DIFF:
+            print_with_indent(show_tuples_diff(source_list=output_source[key], destiny_list=output_destiny[key]), 1)
+            # show_diff(
+            #     output_source[key],
+            #     output_destiny[key],
+            #     fetch_list_from_set
+            # )
