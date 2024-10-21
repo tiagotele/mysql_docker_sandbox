@@ -1,4 +1,4 @@
-from compare_dbs import tuples_list_are_equal, SHOW_DIFF, show_diff, fetch_dict_from_set, fetch_list_from_set, print_with_indent;
+from parallel import tuples_list_are_equal, SHOW_DIFF, show_diff, fetch_dict_from_set, fetch_list_from_set, print_with_indent;
 
 output_source = {'QUERY_01_VERSIONS': [('5.7.41',)],
                  'QUERY_02_VARIABLES': [
