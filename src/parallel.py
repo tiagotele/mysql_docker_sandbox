@@ -5,6 +5,7 @@ from queries import run_query, QUERIES_FIRST_PHASE, TOP_TABLES
 from parallel_query import execute_queries_in_parallel
 from connector_settings import connections
 
+SHOW_DIFF = True
 
 def fetch_list_from_set(current_set):
     return list(map(lambda x: x[0], current_set))
