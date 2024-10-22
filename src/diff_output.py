@@ -85,9 +85,22 @@ output_destiny = {
     ],
 }
 
-
+count_src = {'test.books': [(0,)], 'test.cars': [(0,)], 'test.cities': [(0,)], 'test.companies': [(0,)],
+             'test.countries': [(0,)], 'test.departments': [(0,)], 'test.employees': [(0,)], 'test.orders': [(0,)],
+             'test.people': [(0,)], 'test.products': [(0,)], 'test2.books': [(0,)], 'test2.cars': [(0,)],
+             'test2.cities': [(0,)], 'test2.companies': [(0,)], 'test2.countries': [(0,)], 'test2.departments': [(0,)],
+             'test2.employees': [(0,)], 'test2.orders': [(0,)], 'test2.people': [(0,)], 'test2.products': [('0',)]}
 
 if __name__ == "__main__":
-    compare_output_general_phase(
-        output_src=output_source, output_dest=output_destiny, show_diff=True
-    )
+
+    result = {}
+    for k,v  in count_src.items():
+        result[k] = [ (tuple(str(item) for item in tpl)) for tpl in v ]
+    print(result)
+
+    # for i in count_src:
+    #     print(i)
+    # compare_output_general_phase(
+    #     output_src=output_source, output_dest=output_destiny, show_diff=True
+    # )
+

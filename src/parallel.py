@@ -21,8 +21,10 @@ def compare_lists(
     source_name: str = "blue",
     destiny_name: str = "green",
 ):
+
     set_l1 = set(source_list)
     set_l2 = set(destiny_list)
+
 
     common = set_l1 & set_l2
     only_in_l1 = set_l1 - set_l2
@@ -30,6 +32,7 @@ def compare_lists(
 
     # Generate the output
     output = []
+
 
     # Add common entries
     for item in common:
@@ -63,13 +66,6 @@ def extract_dict_from_list(l: set):
         output[i[0]] = i[1]
     return output
 
-# key_value diff
-def kv_diff(source: list, destiny: list) -> str:
-    source_dict = extract_dict_from_list(set(source))
-    destiny_dict = extract_dict_from_list(set(destiny))
-    return compare_dicts(source_dict, destiny_dict)
-
-
 def compare_dicts(
     dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
 ) -> str:
@@ -87,22 +83,6 @@ def compare_dicts(
         result = result + "\n"
         result = result + f'"{key}","{value_a}","{value_b}",{status}'
     return result
-
-def show_diff(l1: list = [], l2: list = [], transformation=fetch_list_from_set):
-    diff_source_target = set(l1) - set(l2)
-    diff_target_source = set(l2) - set(l1)
-
-    if diff_source_target != set():
-        print(f"\n\nSource doesn't have this elements:")
-        it = transformation(diff_source_target)
-        for i in it:
-            print(i)
-
-    if diff_target_source != set():
-        print(f"\n\nDestiny doesn't have this elements:")
-        it = transformation(diff_target_source)
-        for i in it:
-            print(i)
 
 
 def tuples_list_are_equal(l1: list = [], l2: list = []) -> bool:
@@ -138,6 +118,11 @@ def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff:
                     1,
                 )
 
+def parser_tuples_to_str(d: dict):
+    result = {}
+    for k, v in d.items():
+        result[k] = [(tuple(str(item) for item in tpl)) for tpl in v]
+    return  result
 
 if __name__ == "__main__":
     
@@ -188,9 +173,11 @@ if __name__ == "__main__":
 
     general_data_source = {name: output for name, query, output in sorted(output_src)}
     general_data_destiny = {name: output for name, query, output in sorted(output_dest)}
-    
-    all_keys = set(general_data_source.keys()).union(set(general_data_destiny.keys()))
-    for key in sorted(all_keys):
-        print(f"{key}, {general_data_source[key][0][0]}, {general_data_destiny[key][0][0]}")
+
+    general_data_source = parser_tuples_to_str(general_data_source)
+    general_data_destiny = parser_tuples_to_str(general_data_destiny)
+    compare_output_general_phase(
+        output_src=general_data_source, output_dest=general_data_destiny, show_diff=True
+    )
 
     
