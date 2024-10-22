@@ -5,13 +5,49 @@ from queries import run_query, QUERIES_FIRST_PHASE, TOP_TABLES
 from parallel_query import execute_queries_in_parallel
 from connector_settings import connections
 
-SHOW_DIFF = False
 
 def print_with_indent(message:str, indent_level=0):
     lines = message.split("\n")
     for line in lines:
         indent = "    " * indent_level  # Each indent level adds 4 spaces
         print(f"{indent}{line}")
+
+def join_tuple_elements(t):
+    return ".".join(t)
+
+def compare_lists(
+    source_list: list = [],
+    destiny_list: list = [],
+    source_name: str = "blue",
+    destiny_name: str = "green",
+):
+    set_l1 = set(source_list)
+    set_l2 = set(destiny_list)
+
+    common = set_l1 & set_l2
+    only_in_l1 = set_l1 - set_l2
+    only_in_l2 = set_l2 - set_l1
+
+    # Generate the output
+    output = []
+
+    # Add common entries
+    for item in common:
+        output.append((join_tuple_elements(item), join_tuple_elements(item), "Equal"))
+
+    # Add entries only in l1
+    for item in only_in_l1:
+        output.append((join_tuple_elements(item), "N/A", "Different"))
+
+    # Add entries only in l2
+    for item in only_in_l2:
+        output.append(("N/A", join_tuple_elements(item), "Different"))
+
+    # Print the output
+    output_content = f"{source_name},{destiny_name},result"
+    for item in output:
+        output_content = output_content + "\n" + item[0] + "," + item[1] + "," + item[2]
+    return output_content
 
 def fetch_list_from_set(current_set):
     return list(map(lambda x: x[0], current_set))
@@ -21,10 +57,24 @@ def fetch_dict_from_set(current_set):
     a = list(map(lambda x: {x[0]: x[1]}, current_set))
     return sorted(a, key=lambda d: next(iter(d)))
 
+def extract_dict_from_list(l: set):
+    output = {}
+    for i in l:
+        output[i[0]] = i[1]
+    return output
 
-def compare_dicts(dict_a, dict_b):
+# key_value diff
+def kv_diff(source: list, destiny: list) -> str:
+    source_dict = extract_dict_from_list(set(source))
+    destiny_dict = extract_dict_from_list(set(destiny))
+    return compare_dicts(source_dict, destiny_dict)
+
+
+def compare_dicts(
+    dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
+) -> str:
     all_keys = set(dict_a.keys()).union(set(dict_b.keys()))
-    print(f"table,blue,green,comparator")
+    result = f"key,{source_name},{destiny_name},result"
     for key in all_keys:
         value_a = dict_a.get(key, "N/A")
         value_b = dict_b.get(key, "N/A")
@@ -34,8 +84,9 @@ def compare_dicts(dict_a, dict_b):
             status = "equal"
         else:
             status = "different"
-        print(f'"{key}","{value_a}","{value_b}",{status}')
-
+        result = result + "\n"
+        result = result + f'"{key}","{value_a}","{value_b}",{status}'
+    return result
 
 def show_diff(l1: list = [], l2: list = [], transformation=fetch_list_from_set):
     diff_source_target = set(l1) - set(l2)
@@ -64,6 +115,29 @@ def tuples_list_are_equal(l1: list = [], l2: list = []) -> bool:
         equal_result = True
     return equal_result
 
+def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff: bool):
+    all_keys = set(output_src.keys()).union(set(output_dest.keys()))
+    for key in sorted(all_keys):
+        if tuples_list_are_equal(output_src[key], output_dest[key]):
+            print(f"{key} are igual")
+        else:
+            print(f"{key} are different")
+
+        if show_diff:
+            # If are key value
+            if key in ["QUERY_02_VARIABLES", "QUERY_11_LIST_USERS_AND_HOSTS"]:
+                source_dict = extract_dict_from_list(set(output_src[key]))
+                destiny_dict = extract_dict_from_list(set(output_dest[key]))
+                print_with_indent(compare_dicts(source_dict, destiny_dict), 1)
+            # If elements are just list
+            else:
+                print_with_indent(
+                    compare_lists(
+                        source_list=output_src[key], destiny_list=output_dest[key]
+                    ),
+                    1,
+                )
+
 
 if __name__ == "__main__":
     
@@ -87,25 +161,13 @@ if __name__ == "__main__":
     general_data_source = {name: output for name, query, output in sorted(output_src)}
     general_data_destiny = {name: output for name, query, output in sorted(output_dest)}
 
-    all_keys = set(general_data_source.keys()).union(set(general_data_destiny.keys()))
-    for key in sorted(all_keys):
-        if tuples_list_are_equal(general_data_source[key], general_data_destiny[key]):
-            print(f"{key} are igual")
-        else:
-            print(f"{key} are different")
-            if key in ["QUERY_02_VARIABLES"]:
-                show_diff(
-                    general_data_source[key],
-                    general_data_destiny[key],
-                    fetch_dict_from_set,
-                )
-            else:
-                show_diff(
-                    general_data_source[key],
-                    general_data_destiny[key],
-                    fetch_list_from_set,
-                )
-    
+    # ################################################################
+    # # FIRST PHASE
+    # ################################################################
+    compare_output_general_phase(
+        output_src=general_data_source, output_dest=general_data_destiny, show_diff=True
+    )
+
     # ################################################################
     # # SECOND PHASE
     # ################################################################
