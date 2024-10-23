@@ -1,12 +1,16 @@
 # MySQL Docker
 
-Creating sample database in MySQL version 5.7. Check for compatibility for upgrade version, exporting dump database and reloading into MySQL version 8.0
+Creating sample database in MySQL version 5.7. Check for compatibility for upgrade version, exporting dump database and reloading into MySQL version 8.0.
+Also using custom Python script to compare setting between 2 MySQL version states.
 
 ___
 
-# Exporting data from MySQL version 5.7
+# Starting Databases
+
+Simple run:
+
 ```bash
-./init_mysql8.sh
+docker compose up
 ```
 
 ## Operations inside MySQL in Docker
@@ -27,11 +31,6 @@ docker exec -it my_sql_container bash
 ```
 ___
 # Importing data into MySQL version 8.3.0
-
-## Running MySQL 8.3.0
-```bash
-./init_mysql8.sh
-```
 
 ## Operations inside MySQL in Docker
 Enter MySQL container with this command:
