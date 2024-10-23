@@ -1,4 +1,5 @@
 import time
+from typing import List, Tuple, Dict
 
 from queries import run_query, QUERIES_FIRST_PHASE, TOP_TABLES
 from parallel_query import execute_queries_in_parallel
@@ -6,10 +7,8 @@ from connector_settings import connections
 
 
 def print_with_indent(message: str, indent_level=0):
-    lines = message.split("\n")
-    for line in lines:
-        indent = "    " * indent_level  # Each indent level adds 4 spaces
-        print(f"{indent}{line}")
+    indent = "    " * indent_level
+    print("\n".join(f"{indent}{line}" for line in message.split("\n")) )
 
 
 def join_tuple_elements(t):
@@ -17,11 +16,13 @@ def join_tuple_elements(t):
 
 
 def compare_lists(
-        source_list: list = [],
-        destiny_list: list = [],
-        source_name: str = "blue",
-        destiny_name: str = "green",
-):
+    source_list: List[Tuple] = None,
+    destiny_list: List[Tuple] = None,
+    source_name: str = "blue",
+    destiny_name: str = "green"
+) -> str:
+    source_list = source_list or []
+    destiny_list = destiny_list or []
     set_l1 = set(source_list)
     set_l2 = set(destiny_list)
 
@@ -70,31 +71,17 @@ def extract_dict_from_list(l: set):
 def compare_dicts(
         dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
 ) -> str:
-    all_keys = set(dict_a.keys()).union(set(dict_b.keys()))
     result = f"key,{source_name},{destiny_name},result"
-    for key in all_keys:
-        value_a = dict_a.get(key, "N/A")
-        value_b = dict_b.get(key, "N/A")
-        if value_a == "N/A" or value_b == "N/A":
-            status = "different"
-        elif value_a == value_b:
-            status = "equal"
-        else:
-            status = "different"
-        result = result + "\n"
-        result = result + f'"{key}","{value_a}","{value_b}",{status}'
+    all_keys = dict_a.keys() | dict_b.keys()  # Union of both key sets
+    result += "\n".join([
+        f'{key},{dict_a.get(key, "N/A")},{dict_b.get(key, "N/A")},{"equal" if dict_a.get(key) == dict_b.get(key) else "different"}'
+        for key in all_keys
+    ])
     return result
 
 
-def tuples_list_are_equal(l1: list = [], l2: list = []) -> bool:
-    equal_result = False
-
-    if len(l1) != len(l2):
-        return equal_result
-
-    if set(l1) - set(l2) == set() and set(l2) - set(l1) == set():
-        equal_result = True
-    return equal_result
+def tuples_list_are_equal(l1=None, l2=None):
+    return set(l1) == set(l2)
 
 
 def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff: bool):
