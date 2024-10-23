@@ -9,7 +9,7 @@ services:
     ports:
       - "33010:3306"
     volumes:
-      - ./init_db:/docker-entrypoint-initdb.d
+      - ./init_db_mysql_v57:/docker-entrypoint-initdb.d
       - ./scripts:/scripts
     networks:
       - mysql_net
@@ -22,7 +22,7 @@ services:
     ports:
       - "33011:3306"
     volumes:
-      - ./init_db8:/docker-entrypoint-initdb.d
+      - ./init_db_mysql_v8:/docker-entrypoint-initdb.d
       - ./scripts:/scripts
     networks:
       - mysql_net
