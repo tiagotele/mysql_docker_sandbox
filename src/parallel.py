@@ -46,9 +46,9 @@ def compare_lists(
         output.append(("N/A", join_tuple_elements(item), "Different"))
 
     # Print the output
-    output_content = f"{source_name},{destiny_name},result"
-    for item in output:
-        output_content = output_content + "\n" + item[0] + "," + item[1] + "," + item[2]
+    output_content = f"{source_name},{destiny_name},result\n" + "\n".join(
+        f"{item[0]},{item[1]},{item[2]}" for item in output
+    )
     return output_content
 
 
@@ -71,7 +71,7 @@ def extract_dict_from_list(l: set):
 def compare_dicts(
         dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
 ) -> str:
-    result = f"key,{source_name},{destiny_name},result"
+    result = f"key,{source_name},{destiny_name},result\n"
     all_keys = dict_a.keys() | dict_b.keys()  # Union of both key sets
     result += "\n".join([
         f'{key},{dict_a.get(key, "N/A")},{dict_b.get(key, "N/A")},{"equal" if dict_a.get(key) == dict_b.get(key) else "different"}'
@@ -114,10 +114,10 @@ def parser_tuples_to_str(d: dict):
         result[k] = [(tuple(str(item) for item in tpl)) for tpl in v]
     return result
 
-def query_and_show_result(querie_src, querie_dest, connection_src, connection_dest):
+def query_and_show_result(query_src:dict, query_dest:dict, connection_src:dict, connection_dest:dict) -> None:
     output_src, output_dest = execute_queries_in_parallel(
-        querie_src,
-        querie_dest,
+        query_src,
+        query_dest,
         connection_src,
         connection_dest
     )
