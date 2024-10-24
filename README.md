@@ -17,7 +17,7 @@ docker compose up
 
 Enter MySQL container with this command:
 ```bash
-docker exec -it my_sql_container bash 
+docker exec -it blue bash 
 ```
 
 ### Pre-flight check
@@ -35,7 +35,7 @@ ___
 ## Operations inside MySQL in Docker
 Enter MySQL container with this command:
 ```bash
-docker exec -it my_sql_container_new bash 
+docker exec -it green bash 
 ```
 
 ### Loading dump into current MySQL instance

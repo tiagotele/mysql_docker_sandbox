@@ -140,12 +140,12 @@ if __name__ == "__main__":
     query_and_show_result(
         QUERIES_FIRST_PHASE,
         QUERIES_FIRST_PHASE,
-        connections["config1"],
-        connections["config2"],
+        connections["blue"],
+        connections["green"],
     )
 
-    top_tables_src = run_query(connections["config1"], "TOP_TABLES", TOP_TABLES)
-    top_tables_dest = run_query(connections["config2"], "TOP_TABLES", TOP_TABLES)
+    top_tables_src = run_query(connections["blue"], "TOP_TABLES", TOP_TABLES)
+    top_tables_dest = run_query(connections["green"], "TOP_TABLES", TOP_TABLES)
 
     top_queries_dict_src = {
         f"{schema}.{table}": f"SELECT COUNT(1) FROM {schema}.{table};"
@@ -160,6 +160,6 @@ if __name__ == "__main__":
     query_and_show_result(
         top_queries_dict_src,
         top_queries_dict_dest,
-        connections["config1"],
-        connections["config2"],
+        connections["blue"],
+        connections["green"],
     )

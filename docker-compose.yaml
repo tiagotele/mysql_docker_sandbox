@@ -3,7 +3,7 @@ version: "3.8"
 services:
   mysql_5_7:
     image: mysql/mysql-server:5.7
-    container_name: my_sql_container
+    container_name: mysql_blue
     environment:
       MYSQL_ROOT_PASSWORD: 1234
     ports:
@@ -16,7 +16,7 @@ services:
 
   mysql_8_0:
     image: mysql:8.3.0
-    container_name: my_sql_container_new
+    container_name: mysql_green
     environment:
       MYSQL_ROOT_PASSWORD: 1234
     ports:

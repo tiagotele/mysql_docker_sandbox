@@ -1,5 +1,5 @@
 connections = {
-    "config1": {
+    "blue": {
         "user": "root",
         "password": "1234",
         "host": "localhost",
@@ -8,7 +8,7 @@ connections = {
         "pool_name": "mypool",
         "pool_size": 20,
     },
-    "config2": {
+    "green": {
         "user": "root",
         "password": "1234",
         "host": "localhost",
