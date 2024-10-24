@@ -33,7 +33,7 @@ SELECT
 FROM
 	information_schema.tables
 WHERE
-    table_schema like 'test`%'
+    table_schema like 'test%'
 ORDER BY
 	table_schema
 ;
@@ -173,7 +173,9 @@ def run_query(conn_config, name, query) -> tuple:
         return name, query, result
 
     except mysql.connector.Error as err:
-        return query, f"Error: {err}"
+        return query, f"The query {query} ran with error: {err}"
+    except Exception as ex:
+        return name, f"Query execution error: {ex}"
 
     finally:
         if cursor:
