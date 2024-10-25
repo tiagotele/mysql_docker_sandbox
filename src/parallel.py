@@ -4,6 +4,7 @@ from typing import List, Tuple, Dict
 from queries import run_query, QUERIES_FIRST_PHASE, TOP_TABLES
 from parallel_query import execute_queries_in_parallel
 from connector_settings import connections
+from report import generate_general_report
 
 
 def print_with_indent(message: str, indent_level=0):
@@ -14,6 +15,40 @@ def print_with_indent(message: str, indent_level=0):
 def join_tuple_elements(t):
     return ".".join(t)
 
+
+def generate_lists_comparison(
+    source_list: List[Tuple] = None,
+    destiny_list: List[Tuple] = None,
+    source_name: str = "blue",
+    destiny_name: str = "green",
+) -> dict:
+
+    keys = [source_name, destiny_name, "result"]
+    values = []
+
+    source_list = source_list or []
+    destiny_list = destiny_list or []
+    set_l1 = set(source_list)
+    set_l2 = set(destiny_list)
+
+    common = set_l1 & set_l2
+    only_in_l1 = set_l1 - set_l2
+    only_in_l2 = set_l2 - set_l1
+
+
+    # Add common entries
+    for item in common:
+        values.append([(join_tuple_elements(item), join_tuple_elements(item), "Equal")])
+
+    # Add entries only in l1
+    for item in only_in_l1:
+        values.append([(join_tuple_elements(item), "N/A", "Different")])
+
+    # Add entries only in l2
+    for item in only_in_l2:
+        values.append([("N/A", join_tuple_elements(item), "Different")])
+
+    return {"keys": keys, "values": values}
 
 def compare_lists(
     source_list: List[Tuple] = None,
@@ -68,6 +103,24 @@ def extract_dict_from_list(l: set):
     return output
 
 
+def generate_dict_comparison(
+    dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
+) -> dict:
+    keys = ["key", source_name, destiny_name, "result"]
+    values = []
+    all_keys = dict_a.keys() | dict_b.keys()  # Union of both key sets
+    values.append(
+        [
+            [{key},
+             {dict_a.get(key, "N/A")},
+             {dict_b.get(key, "N/A")},
+             {"equal" if dict_a.get(key) == dict_b.get(key) else "different"}]
+            for key in all_keys
+        ]
+    )
+
+    return {"keys": keys, "values": values}
+
 def compare_dicts(
     dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
 ) -> str:
@@ -86,7 +139,8 @@ def tuples_list_are_equal(l1=None, l2=None):
     return set(l1) == set(l2)
 
 
-def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff: bool):
+def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff: bool) -> dict:
+    all_data={}
     all_keys = set(output_src.keys()).union(set(output_dest.keys()))
     for key in sorted(all_keys):
         if tuples_list_are_equal(output_src[key], output_dest[key]):
@@ -95,10 +149,12 @@ def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff:
             print(f"{key} are different")
 
         if show_diff:
+            comparison_output = {}
             # If are key value
             if key in ["QUERY_02_VARIABLES", "QUERY_11_LIST_USERS_AND_HOSTS"]:
                 source_dict = extract_dict_from_list(set(output_src[key]))
                 destiny_dict = extract_dict_from_list(set(output_dest[key]))
+                comparison_output = generate_dict_comparison(source_dict, destiny_dict)
                 print_with_indent(compare_dicts(source_dict, destiny_dict), 1)
             # If elements are just list
             else:
@@ -108,6 +164,9 @@ def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff:
                     ),
                     1,
                 )
+                comparison_output = generate_lists_comparison(output_src[key], output_dest[key])
+            all_data[key] = comparison_output
+    return all_data
 
 
 def parser_tuples_to_str(d: dict):
@@ -119,31 +178,35 @@ def parser_tuples_to_str(d: dict):
 
 def query_and_show_result(
     query_src: dict, query_dest: dict, connection_src: dict, connection_dest: dict
-) -> None:
+) -> dict:
     output_src, output_dest = execute_queries_in_parallel(
         query_src, query_dest, connection_src, connection_dest
     )
 
-    general_data_source = {name: output for name, query, output in sorted(output_src)}
-    general_data_destiny = {name: output for name, query, output in sorted(output_dest)}
+    general_data_source = {name: sorted(output) for name, query, output in sorted(output_src)}
+    general_data_destiny = {name: sorted(output) for name, query, output in sorted(output_dest)}
 
     general_data_source = parser_tuples_to_str(general_data_source)
     general_data_destiny = parser_tuples_to_str(general_data_destiny)
-    compare_output_general_phase(
+    formated_output = compare_output_general_phase(
         output_src=general_data_source, output_dest=general_data_destiny, show_diff=True
     )
+    return formated_output
+
+
+
 
 
 if __name__ == "__main__":
 
     # FIRST PHASE
-    query_and_show_result(
+    output_phase1 = query_and_show_result(
         QUERIES_FIRST_PHASE,
         QUERIES_FIRST_PHASE,
         connections["blue"],
         connections["green"],
     )
-
+    generate_general_report(output_phase1)
     top_tables_src = run_query(connections["blue"], "TOP_TABLES", TOP_TABLES)
     top_tables_dest = run_query(connections["green"], "TOP_TABLES", TOP_TABLES)
 

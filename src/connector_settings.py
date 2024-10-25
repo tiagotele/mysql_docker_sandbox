@@ -3,7 +3,7 @@ connections = {
         "user": "root",
         "password": "1234",
         "host": "localhost",
-        "port": 33010,
+        "port": 33011,
         "database": "test",
         "pool_name": "mypool",
         "pool_size": 20,
