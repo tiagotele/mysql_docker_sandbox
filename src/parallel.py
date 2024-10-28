@@ -17,13 +17,12 @@ def join_tuple_elements(t):
 
 
 def generate_lists_comparison(
-    source_list: List[Tuple] = None,
-    destiny_list: List[Tuple] = None,
-    source_name: str = "blue",
-    destiny_name: str = "green",
-) -> dict:
-
-    keys = [source_name, destiny_name, "result"]
+        source_list: List[Tuple] = None,
+        destiny_list: List[Tuple] = None,
+        source_name: str = "blue",
+        destiny_name: str = "green",
+) -> list:
+    # keys = [source_name, destiny_name, "result"]
     values = []
 
     source_list = source_list or []
@@ -35,26 +34,28 @@ def generate_lists_comparison(
     only_in_l1 = set_l1 - set_l2
     only_in_l2 = set_l2 - set_l1
 
-
     # Add common entries
-    for item in common:
-        values.append([(join_tuple_elements(item), join_tuple_elements(item), "Equal")])
+    for i in common:
+        values.append(
+            {source_name: join_tuple_elements(i), destiny_name: join_tuple_elements(i), "Result": "Equal"})
 
-    # Add entries only in l1
-    for item in only_in_l1:
-        values.append([(join_tuple_elements(item), "N/A", "Different")])
+        # Add entries only in l1
+        for i in only_in_l1:
+            values.append({source_name: join_tuple_elements(i), destiny_name: "N\A", "Result": "Different"})
 
-    # Add entries only in l2
-    for item in only_in_l2:
-        values.append([("N/A", join_tuple_elements(item), "Different")])
+        # Add entries only in l2
+        for i in only_in_l2:
+            # values.append([("N/A", join_tuple_elements(i), "Different")])
+            values.append({source_name: "N\A", destiny_name: join_tuple_elements(i), "Result": "Different"})
 
-    return {"keys": keys, "values": values}
+    return values
+
 
 def compare_lists(
-    source_list: List[Tuple] = None,
-    destiny_list: List[Tuple] = None,
-    source_name: str = "blue",
-    destiny_name: str = "green",
+        source_list: List[Tuple] = None,
+        destiny_list: List[Tuple] = None,
+        source_name: str = "blue",
+        destiny_name: str = "green",
 ) -> str:
     source_list = source_list or []
     destiny_list = destiny_list or []
@@ -104,25 +105,30 @@ def extract_dict_from_list(l: set):
 
 
 def generate_dict_comparison(
-    dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
-) -> dict:
-    keys = ["key", source_name, destiny_name, "result"]
+        dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
+) -> list:
+    # keys = ["key", source_name, destiny_name, "result"]
     values = []
     all_keys = dict_a.keys() | dict_b.keys()  # Union of both key sets
-    values.append(
-        [
-            [{key},
-             {dict_a.get(key, "N/A")},
-             {dict_b.get(key, "N/A")},
-             {"equal" if dict_a.get(key) == dict_b.get(key) else "different"}]
-            for key in all_keys
-        ]
-    )
+    for key in all_keys:
+        d = {"key": {key},
+              "blue": dict_a.get(key, "N/A"),
+              "green": dict_b.get(key, "N/A"),
+              "result": "equal" if dict_a.get(key) == dict_b.get(key) else "different"}
+        values.append(d)
+    # values.append(
+    #     {"key": {key},
+    #           "blue": dict_a.get(key, "N/A"),
+    #           "green": dict_b.get(key, "N/A"),
+    #           "result": "equal" if dict_a.get(key) == dict_b.get(key) else "different"}
+    #          for key in all_keys
+    # )
 
-    return {"keys": keys, "values": values}
+    return values
+
 
 def compare_dicts(
-    dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
+        dict_a: dict, dict_b: dict, source_name: str = "blue", destiny_name: str = "green"
 ) -> str:
     result = f"key,{source_name},{destiny_name},result\n"
     all_keys = dict_a.keys() | dict_b.keys()  # Union of both key sets
@@ -140,7 +146,7 @@ def tuples_list_are_equal(l1=None, l2=None):
 
 
 def compare_output_general_phase(output_src: dict, output_dest: dict, show_diff: bool) -> dict:
-    all_data={}
+    all_data = {}
     all_keys = set(output_src.keys()).union(set(output_dest.keys()))
     for key in sorted(all_keys):
         if tuples_list_are_equal(output_src[key], output_dest[key]):
@@ -177,7 +183,7 @@ def parser_tuples_to_str(d: dict):
 
 
 def query_and_show_result(
-    query_src: dict, query_dest: dict, connection_src: dict, connection_dest: dict
+        query_src: dict, query_dest: dict, connection_src: dict, connection_dest: dict
 ) -> dict:
     output_src, output_dest = execute_queries_in_parallel(
         query_src, query_dest, connection_src, connection_dest
@@ -194,11 +200,7 @@ def query_and_show_result(
     return formated_output
 
 
-
-
-
 if __name__ == "__main__":
-
     # FIRST PHASE
     output_phase1 = query_and_show_result(
         QUERIES_FIRST_PHASE,
