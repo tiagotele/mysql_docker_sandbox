@@ -1,7 +1,7 @@
 import time
 from typing import List, Tuple, Dict
 
-from queries import *
+from queries import run_query, TOP_TABLES, QUERIES_FIRST_PHASE, QUERIES_THIRD_PHASE
 from parallel_query import execute_queries_in_parallel
 from connector_settings import connections
 
