@@ -152,28 +152,41 @@ QUERIES_FIRST_PHASE = {
 }
 
 QUERIES_THIRD_PHASE = {
-    "test.books": "SELECT * FROM test.books;",
-    "test.cars": "SELECT * FROM test.cars;",
-    "test.cities": "SELECT * FROM test.cities;",
-    "test.companies": "SELECT * FROM test.companies;",
-    "test.countries": "SELECT * FROM test.countries;",
-    "test.departments": "SELECT * FROM test.departments;",
-    "test.employees": "SELECT * FROM test.employees;",
-    "test.orders": "SELECT * FROM test.orders;",
-    "test.people": "SELECT * FROM test.people;",
-    "test.products": "SELECT * FROM test.products;",
-    "test2.books": "SELECT * FROM test2.books;",
-    "test2.cars": "SELECT * FROM test2.cars;",
-    "test2.cities": "SELECT * FROM test2.cities;",
-    "test2.companies": "SELECT * FROM test2.companies;",
-    "test2.countries": "SELECT * FROM test2.countries;",
-    "test2.departments": "SELECT * FROM test2.departments;",
-    "test2.employees": "SELECT * FROM test2.employees;",
-    "test2.orders": "SELECT * FROM test2.orders;",
-    "test2.people": "SELECT * FROM test2.people;",
-    "test2.products": "SELECT * FROM test2.products;",
+    "test.people": "SELECT * FROM test.people ORDER BY 1;",
+    "test.cars": "SELECT * FROM test.cars ORDER BY 1;",
+    "test.cities": "SELECT * FROM test.cities ORDER BY 1;",
+    "test.companies": "SELECT * FROM test.companies ORDER BY 1;",
+    "test2.books": "SELECT * FROM test2.books ORDER BY 1;",
+    "test2.cars": "SELECT * FROM test2.cars ORDER BY 1;",
+    "test2.cities": "SELECT * FROM test2.cities ORDER BY 1;",
+    "test2.companies": "SELECT * FROM test2.companies ORDER BY 1;",
 }
 
+QUERY_TOP_TABLES_DESC = """
+SELECT 
+    TABLE_SCHEMA,
+    TABLE_NAME,
+    TABLE_ROWS
+FROM 
+    INFORMATION_SCHEMA.TABLES
+WHERE 
+    TABLE_SCHEMA NOT IN ('mysql', 'information_schema', 'performance_schema', 'sys')
+    AND TABLE_TYPE = 'BASE TABLE'
+ORDER BY 
+    TABLE_ROWS DESC;
+"""
+
+QUERY_COLUMNS_FROM_TABLE = "SHOW COLUMNS FROM {table};"
+
+FETCH_FIRST_N_ROWS_FROM_TABLE="""
+SELECT
+    *
+FROM 
+    {table}
+ORDER BY 1
+LIMIT {limit}
+;
+"""
 
 def run_query(conn_config, name, query) -> tuple:
 

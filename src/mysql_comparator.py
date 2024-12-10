@@ -1,7 +1,7 @@
 import time
 from typing import List, Tuple, Dict
 
-from queries import run_query, QUERIES_FIRST_PHASE, TOP_TABLES, QUERIES_THIRD_PHASE
+from queries import *
 from parallel_query import execute_queries_in_parallel
 from connector_settings import connections
 
@@ -133,6 +133,22 @@ def query_and_show_result(
         output_src=general_data_source, output_dest=general_data_destiny, show_diff=show_diff
     )
 
+def compare_content(connctions_src = {}, connection_dest = {}):
+    top_tables_rows_src, top_tables_rows_dest = execute_queries_in_parallel(queries_src=QUERIES_THIRD_PHASE, queries_dest=QUERIES_THIRD_PHASE, config_src=connctions_src, config_dest=connection_dest)
+    
+    source_results = {}
+    for _, query, result in top_tables_rows_src:
+        source_results[query] = result
+    
+    destiny_results = {}
+    for _, query, result in top_tables_rows_dest:
+        destiny_results[query] = result
+    
+    for query in QUERIES_THIRD_PHASE.values():
+        if source_results[query] == destiny_results[query]:
+            print(f"Query {query} equal")
+        else:
+            print(f"Query {query} different")
 
 if __name__ == "__main__":
 
@@ -156,9 +172,6 @@ if __name__ == "__main__":
         for schema, table in top_tables_dest[2]
     }
 
-    queries_third_phase = {
-        ""
-    }
     # SECOND PHASE
     query_and_show_result(
         top_queries_dict_src,
@@ -168,11 +181,4 @@ if __name__ == "__main__":
     )
 
     # THIRD PHASE
-    query_and_show_result(
-        QUERIES_THIRD_PHASE,
-        QUERIES_THIRD_PHASE,
-        connections["blue"],
-        connections["green"],
-        show_diff=False
-    )
-
+    compare_content(connections["blue"], connections["green"])

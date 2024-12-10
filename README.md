@@ -57,5 +57,5 @@ docker compose up
 
 Then run the Python script:
 ```bash
-python3 src/parallel.py
+python3 src/mysql_comparator.py
 ```

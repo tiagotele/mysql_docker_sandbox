@@ -17,10 +17,10 @@ def run_completed(futures):
 
 
 def execute_queries_in_parallel(
-    queries_src: dict = None,
-    queries_dest: dict = None,
-    config_src: dict = None,
-    config_dest: dict = None,
+    queries_src: dict = {},
+    queries_dest: dict = {},
+    config_src: dict = {},
+    config_dest: dict = {},
 ):
     print("Starting queries")
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
