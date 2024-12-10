@@ -162,32 +162,6 @@ QUERIES_THIRD_PHASE = {
     "test2.companies": "SELECT * FROM test2.companies ORDER BY 1;",
 }
 
-QUERY_TOP_TABLES_DESC = """
-SELECT 
-    TABLE_SCHEMA,
-    TABLE_NAME,
-    TABLE_ROWS
-FROM 
-    INFORMATION_SCHEMA.TABLES
-WHERE 
-    TABLE_SCHEMA NOT IN ('mysql', 'information_schema', 'performance_schema', 'sys')
-    AND TABLE_TYPE = 'BASE TABLE'
-ORDER BY 
-    TABLE_ROWS DESC;
-"""
-
-QUERY_COLUMNS_FROM_TABLE = "SHOW COLUMNS FROM {table};"
-
-FETCH_FIRST_N_ROWS_FROM_TABLE="""
-SELECT
-    *
-FROM 
-    {table}
-ORDER BY 1
-LIMIT {limit}
-;
-"""
-
 def run_query(conn_config, name, query) -> tuple:
 
     cnx = None
