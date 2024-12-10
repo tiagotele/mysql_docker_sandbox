@@ -151,6 +151,16 @@ QUERIES_FIRST_PHASE = {
     "QUERY_12_LIST_USERS_AND_ITS_PERMISSIONS": QUERY_12_LIST_USERS_AND_ITS_PERMISSIONS,
 }
 
+QUERIES_THIRD_PHASE = {
+    "test.people": "SELECT * FROM test.people ORDER BY 1;",
+    "test.cars": "SELECT * FROM test.cars ORDER BY 1;",
+    "test.cities": "SELECT * FROM test.cities ORDER BY 1;",
+    "test.companies": "SELECT * FROM test.companies ORDER BY 1;",
+    "test2.books": "SELECT * FROM test2.books ORDER BY 1;",
+    "test2.cars": "SELECT * FROM test2.cars ORDER BY 1;",
+    "test2.cities": "SELECT * FROM test2.cities ORDER BY 1;",
+    "test2.companies": "SELECT * FROM test2.companies ORDER BY 1;",
+}
 
 def run_query(conn_config, name, query) -> tuple:
 

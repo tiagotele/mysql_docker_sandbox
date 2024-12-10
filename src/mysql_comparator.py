@@ -1,7 +1,7 @@
 import time
 from typing import List, Tuple, Dict
 
-from queries import run_query, QUERIES_FIRST_PHASE, TOP_TABLES
+from queries import run_query, TOP_TABLES, QUERIES_FIRST_PHASE, QUERIES_THIRD_PHASE
 from parallel_query import execute_queries_in_parallel
 from connector_settings import connections
 
@@ -118,7 +118,7 @@ def parser_tuples_to_str(d: dict):
 
 
 def query_and_show_result(
-    query_src: dict, query_dest: dict, connection_src: dict, connection_dest: dict
+    query_src: dict, query_dest: dict, connection_src: dict, connection_dest: dict, show_diff=True
 ) -> None:
     output_src, output_dest = execute_queries_in_parallel(
         query_src, query_dest, connection_src, connection_dest
@@ -130,9 +130,25 @@ def query_and_show_result(
     general_data_source = parser_tuples_to_str(general_data_source)
     general_data_destiny = parser_tuples_to_str(general_data_destiny)
     compare_output_general_phase(
-        output_src=general_data_source, output_dest=general_data_destiny, show_diff=True
+        output_src=general_data_source, output_dest=general_data_destiny, show_diff=show_diff
     )
 
+def compare_content(connctions_src = {}, connection_dest = {}):
+    top_tables_rows_src, top_tables_rows_dest = execute_queries_in_parallel(queries_src=QUERIES_THIRD_PHASE, queries_dest=QUERIES_THIRD_PHASE, config_src=connctions_src, config_dest=connection_dest)
+    
+    source_results = {}
+    for _, query, result in top_tables_rows_src:
+        source_results[query] = result
+    
+    destiny_results = {}
+    for _, query, result in top_tables_rows_dest:
+        destiny_results[query] = result
+    
+    for query in QUERIES_THIRD_PHASE.values():
+        if source_results[query] == destiny_results[query]:
+            print(f"Query {query} equal")
+        else:
+            print(f"Query {query} different")
 
 if __name__ == "__main__":
 
@@ -163,3 +179,6 @@ if __name__ == "__main__":
         connections["blue"],
         connections["green"],
     )
+
+    # THIRD PHASE
+    compare_content(connections["blue"], connections["green"])
